@@ -1,0 +1,21 @@
+MainWindow {
+    background-color: rgb(46, 47, 48);
+}
+
+QMenuBar {
+    background-color: rgb(46, 47, 48);
+    color: rgb(231, 231, 231);
+}
+
+QMenu {
+    color: rgb(231, 231, 231);
+    background-color: rgb(55, 55, 55);
+}
+
+QMenuBar::item::selected {
+    background-color: rgb(80, 80, 80);
+}
+
+QMenu::item::selected {
+    background-color: rgb(39, 96, 154);
+}
