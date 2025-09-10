@@ -3,6 +3,8 @@
 #include <QMenu>
 #include <QAction>
 #include <QDebug>
+#include "wizard.h"
+#include "protree.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -33,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
     //连接信号和槽
     connect(act_create_pro, &QAction::triggered, this, &MainWindow::SlotCreatePro);
     // connect(act_open_pro, &QAction::triggered, this, )
+
+    _protree = new ProTree();
+    ui->proLayout->addWidget(_protree);
 }
 
 MainWindow::~MainWindow()
@@ -43,4 +48,14 @@ MainWindow::~MainWindow()
 void MainWindow::SlotCreatePro()
 {
     qDebug() << "act_create_pro triggered SlotCreatePro";
+    Wizard wizard(this);
+    wizard.setWindowTitle(tr("创建项目"));
+
+    auto* page = wizard.page(0);
+    page->setTitle(tr("设置项目配置"));
+    connect(&wizard, &Wizard::SigProSettings, dynamic_cast<ProTree*>(_protree), &ProTree::AddProTree);
+
+    wizard.show();
+    wizard.exec();
+    disconnect();
 }
