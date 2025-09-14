@@ -2,15 +2,23 @@
 #include "ui_mainwindow.h"
 #include <QMenu>
 #include <QAction>
+#include <QScreen>
+#include <QRect>
 #include <QDebug>
 #include "wizard.h"
 #include "protree.h"
+#include <QFileDialog>
+#include "protreewidget.h"
+#include "picshowdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QRect screenSize = QGuiApplication::primaryScreen()->geometry();
+    this->setMinimumSize(screenSize.width() / 2, screenSize.height() / 2);
 
     //创建菜单
     QMenu* menu_file = ui->menubar->addMenu(tr("文件(&F)"));
@@ -34,15 +42,40 @@ MainWindow::MainWindow(QWidget *parent)
 
     //连接信号和槽
     connect(act_create_pro, &QAction::triggered, this, &MainWindow::SlotCreatePro);
-    // connect(act_open_pro, &QAction::triggered, this, )
+    connect(act_open_pro, &QAction::triggered, this, &MainWindow::SlotOpenPro);
 
     _protree = new ProTree();
     ui->proLayout->addWidget(_protree);
+
+    QTreeWidget* tree_widget = dynamic_cast<ProTree*>(_protree)->GetTreeWidget();
+    auto* pro_tree_widget = dynamic_cast<ProTreeWidget*>(tree_widget);
+
+    connect(this, &MainWindow::SigOpenPro, pro_tree_widget, &ProTreeWidget::SlotOpenPro);
+
+    _picshow = new PicShowDialog();
+    ui->picLayout->addWidget(_picshow);
+
+    auto* pro_pic_show = dynamic_cast<PicShowDialog*>(_picshow);
+    connect(pro_tree_widget, &ProTreeWidget::SigUpdateSelected, pro_pic_show, &PicShowDialog::SlotSelectItem);
+
+    connect(pro_pic_show, &PicShowDialog::SigNextClicked, pro_tree_widget, &ProTreeWidget::SlotNextShow);
+    connect(pro_pic_show, &PicShowDialog::SigPreClicked, pro_tree_widget, &ProTreeWidget::SlotPreShow);
+
+    connect(pro_tree_widget, &ProTreeWidget::SigUpdateSelected, pro_pic_show, &PicShowDialog::SlotSelectItem);
+
+    connect(pro_tree_widget, &ProTreeWidget::SigClearSelected, pro_pic_show, &PicShowDialog::SlotDeleteItem);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    auto* pro_pic_show = dynamic_cast<PicShowDialog*>(_picshow);
+    pro_pic_show->ReloadPic();
+    QMainWindow::resizeEvent(event);
 }
 
 void MainWindow::SlotCreatePro()
@@ -57,5 +90,28 @@ void MainWindow::SlotCreatePro()
 
     wizard.show();
     wizard.exec();
-    disconnect();
+    disconnect(&wizard);
+}
+
+void MainWindow::SlotOpenPro()
+{
+    QFileDialog file_dialog;
+    file_dialog.setFileMode(QFileDialog::Directory);
+    file_dialog.setWindowTitle(tr("选择导入的文件夹"));
+    file_dialog.setDirectory(QDir::currentPath());
+    file_dialog.setViewMode(QFileDialog::Detail);
+
+    QStringList fileNames;
+    if (file_dialog.exec()) {
+        fileNames = file_dialog.selectedFiles();
+    }
+
+    if (fileNames.length() <= 0) {
+        return;
+    }
+
+    QString import_path = fileNames.at(0);
+
+    // qDebug() << "发送信号SigOpenPro";
+    emit SigOpenPro(import_path);
 }

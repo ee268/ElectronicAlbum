@@ -61,8 +61,20 @@ QTreeView::item::selected {
 
 QTreeView::branch:open:has-children:!has-siblings,
 QTreeView::branch:open:has-children:has-siblings
-{image:url(:/icon/down.png);}
+{image: url(:/icon/down.png);}
 
 QTreeView::branch:closed:has-children:!has-siblings,
 QTreeView::branch:closed:has-children:has-siblings
-[image:url(:/icon/right.png)；}
+{image: url(:/icon/right.png);}
+
+PicShowDialog {
+    border-color: #9f9f9f;
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    padding: 10px;
+    background: rgb(64, 66, 68);
+}
+
+#nextButton, #previousButton {
+    border: 0px;
+}

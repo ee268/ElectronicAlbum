@@ -4,5 +4,12 @@
         <file>icon/down.png</file>
         <file>icon/right.png</file>
         <file>icon/folder.png</file>
+        <file>icon/picture.png</file>
+        <file>icon/next.png</file>
+        <file>icon/next_hover.png</file>
+        <file>icon/next_press.png</file>
+        <file>icon/previous.png</file>
+        <file>icon/previous_hover.png</file>
+        <file>icon/previous_press.png</file>
     </qresource>
 </RCC>

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QResizeEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,11 +18,19 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+    virtual void resizeEvent(QResizeEvent *event);
+
 private:
     Ui::MainWindow *ui;
     QWidget* _protree;
+    QWidget* _picshow;
 
 private slots:
     void SlotCreatePro();
+    void SlotOpenPro();
+
+signals:
+    void SigOpenPro(const QString&);
 };
 #endif // MAINWINDOW_H
