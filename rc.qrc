@@ -11,5 +11,15 @@
         <file>icon/previous.png</file>
         <file>icon/previous_hover.png</file>
         <file>icon/previous_press.png</file>
+        <file>icon/album.ico</file>
+        <file>icon/closeshow.png</file>
+        <file>icon/closeshow_hover.png</file>
+        <file>icon/closeshow_press.png</file>
+        <file>icon/pause.png</file>
+        <file>icon/pause_hover.png</file>
+        <file>icon/pause_press.png</file>
+        <file>icon/play.png</file>
+        <file>icon/play_hover.png</file>
+        <file>icon/play_press.png</file>
     </qresource>
 </RCC>

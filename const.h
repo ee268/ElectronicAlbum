@@ -8,6 +8,16 @@ enum TreeItemType {
     TreeItemLine,    //表示项目分隔符
 };
 
+enum PicBtnState{
+    PicBtnStateNormal = 1,
+    PicBtnStateHover,
+    PicBtnStatePress,
+
+    PicBtnState2Normal = 4,
+    PicBtnState2Hover,
+    PicBtnState2Press,
+};
+
 const int PROGRESS_WIDTH = 300;
 const int PROGRESS_MAX = 300;
 

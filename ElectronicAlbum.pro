@@ -9,12 +9,15 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    carouseldialog.cpp \
     confirmpage.cpp \
     main.cpp \
     mainwindow.cpp \
     openprothread.cpp \
+    picanimationwidget.cpp \
     picbutton.cpp \
     picshowdialog.cpp \
+    picstatebtn.cpp \
     prosetpage.cpp \
     protree.cpp \
     protreeitem.cpp \
@@ -24,12 +27,16 @@ SOURCES += \
     wizard.cpp
 
 HEADERS += \
+    carouseldialog.h \
     confirmpage.h \
     const.h \
+    include/test.h \
     mainwindow.h \
     openprothread.h \
+    picanimationwidget.h \
     picbutton.h \
     picshowdialog.h \
+    picstatebtn.h \
     prosetpage.h \
     protree.h \
     protreeitem.h \
@@ -39,6 +46,7 @@ HEADERS += \
     wizard.h
 
 FORMS += \
+    carouseldialog.ui \
     confirmpage.ui \
     mainwindow.ui \
     picshowdialog.ui \
@@ -46,6 +54,8 @@ FORMS += \
     protree.ui \
     removeprodialog.ui \
     wizard.ui
+
+RC_ICONS = "icon/album.ico"
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

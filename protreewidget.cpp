@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QFileDialog>
 #include "removeprodialog.h"
+#include "carouseldialog.h"
 
 ProTreeWidget::ProTreeWidget(QWidget *parent)
     : _right_btn_item(nullptr)
@@ -34,6 +35,7 @@ ProTreeWidget::ProTreeWidget(QWidget *parent)
     connect(_action_setstart, &QAction::triggered, this, &ProTreeWidget::slotSetActive);
     connect(_action_closepro, &QAction::triggered, this, &ProTreeWidget::SlotClosePro);
     connect(this, &ProTreeWidget::itemDoubleClicked, this, &ProTreeWidget::SlotDoubleClickItem);
+    connect(_action_slideshow, &QAction::triggered, this, &ProTreeWidget::SlotSlideShow);
 }
 
 void ProTreeWidget::AddProToTree()
@@ -229,6 +231,31 @@ void ProTreeWidget::SlotClosePro()
     }
 
     delete this->takeTopLevelItem(index_right_btn);
+}
+
+void ProTreeWidget::SlotSlideShow()
+{
+    if (!_right_btn_item) {
+        return;
+    }
+
+    auto* right_pro_item = dynamic_cast<ProTreeItem*>(_right_btn_item);
+    auto* last_child_item = right_pro_item->GetLastPicChild();
+    if (!last_child_item) {
+        return;
+    }
+
+    auto* first_child_item = right_pro_item->GetFirstPicChild();
+    if (!first_child_item) {
+        return;
+    }
+
+    qDebug() << "first item path is: " << first_child_item->GetPath();
+    qDebug() << "last item path is: " << last_child_item->GetPath();
+
+    _slide_show_dlg = std::make_shared<CarouselDialog>(first_child_item, last_child_item, this);
+    _slide_show_dlg->setModal(true);
+    _slide_show_dlg->showMaximized();
 }
 
 void ProTreeWidget::SlotUpdateProgress(int file_cnt)

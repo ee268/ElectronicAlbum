@@ -75,6 +75,41 @@ PicShowDialog {
     background: rgb(64, 66, 68);
 }
 
-#nextButton, #previousButton {
+#nextButton, #previousButton, #closeBtn, #playBtn, #slidenextBtn, #slidepreBtn {
     border: 0px;
+}
+
+CarouselDialog {
+    color: rgb(231, 231, 231);
+    background-color: rgb(46, 47, 48);
+}
+
+#preListWidget {
+    color: rgb(231, 231, 231);
+    background-color: rgb(46, 47, 48);
+    border: 0px;
+}
+
+#preListWidget::item:hover {
+    background-color: rgb(38, 95, 153);
+}
+
+#preListWidget::item:selected {
+    background-color: rgb(38, 95, 153);
+}
+
+#slidnextwid {
+    margin-left: 10px;
+}
+
+#slidprewid {
+    margin-right: 10px;
+}
+
+#preListWidget::item:selected:active {
+    border: 2px solid #ffffff;
+}
+
+#preListWidget::item:selected {
+    border: 2px solid #ffffff;
 }

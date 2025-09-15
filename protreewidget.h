@@ -6,6 +6,7 @@
 #include <QProgressDialog>
 #include "protreethread.h"
 #include "OpenProThread.h"
+class CarouselDialog;
 
 class ProTreeWidget : public QTreeWidget
 {
@@ -33,12 +34,15 @@ private:
     std::shared_ptr<ProTreeThread> _thread_create_pro;
     std::shared_ptr<OpenProThread> _thread_open_pro;
 
+    std::shared_ptr<CarouselDialog> _slide_show_dlg;
+
 public slots:
     void SlotitemPressed(QTreeWidgetItem *item, int column);
     void SlotDoubleClickItem(QTreeWidgetItem *item, int column);
     void SlotImport();
     void slotSetActive();
     void SlotClosePro();
+    void SlotSlideShow();
 
     void SlotUpdateProgress(int file_cnt);
     void SlotFinishProgress(int file_cnt);
