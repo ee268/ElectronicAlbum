@@ -13,7 +13,8 @@
 #include "carouseldialog.h"
 
 ProTreeWidget::ProTreeWidget(QWidget *parent)
-    : _right_btn_item(nullptr)
+    : QTreeWidget(parent)
+    , _right_btn_item(nullptr)
     , _active_item(nullptr)
     , _selected_item(nullptr)
     , _dialog_progress(nullptr)

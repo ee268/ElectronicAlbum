@@ -44,7 +44,7 @@ void ProTreeThread::run()
     }
 
     emit SigFinishProgress(_file_cnt);
-    emit SigCreateEmptyToTree();
+    // emit SigCreateEmptyToTree();
 }
 
 void ProTreeThread::CreateProTree(const QString &src_path, const QString &dist_path, QTreeWidgetItem *parent_item, int &file_cnt, QTreeWidget *self, QTreeWidgetItem *root, QTreeWidgetItem *preItem)

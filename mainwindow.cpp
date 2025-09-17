@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(act_create_pro, &QAction::triggered, this, &MainWindow::SlotCreatePro);
     connect(act_open_pro, &QAction::triggered, this, &MainWindow::SlotOpenPro);
 
-    _protree = new ProTree();
+    _protree = new ProTree(this);
     ui->proLayout->addWidget(_protree);
 
     QTreeWidget* tree_widget = dynamic_cast<ProTree*>(_protree)->GetTreeWidget();

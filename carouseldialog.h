@@ -16,6 +16,9 @@ public:
     explicit CarouselDialog(QTreeWidgetItem* first_item, QTreeWidgetItem* last_item, QWidget *parent = nullptr);
     ~CarouselDialog();
 
+private slots:
+    void on_closeBtn_clicked();
+
 private:
     Ui::CarouselDialog *ui;
     QTreeWidgetItem* _first_item;

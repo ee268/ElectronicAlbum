@@ -2,6 +2,7 @@
 #include "protreeitem.h"
 #include <QTimer>
 #include <QPainter>
+#include <QDebug>
 
 PicAnimationWidget::PicAnimationWidget(QWidget *parent)
     : QWidget{parent}
@@ -32,9 +33,12 @@ void PicAnimationWidget::SetPixmap(QTreeWidgetItem *item)
     if (_map_items.find(path) == _map_items.end()) {
         _map_items[path] = tree_item;
         //发送更新预览列表逻辑
-
+        emit SigUpPreList(item);
     }
 
+    emit SigSelectItem(item);
+
+    // qDebug() << "SetPixmap call GetNextItem";
     auto* next_item = tree_item->GetNextItem();
     if (!next_item) {
         return;
@@ -45,8 +49,10 @@ void PicAnimationWidget::SetPixmap(QTreeWidgetItem *item)
     if (_map_items.find(next_path) == _map_items.end()) {
         _map_items[next_path] = next_item;
         //发送更新预览列表逻辑
-
+        emit SigUpPreList(next_item);
     }
+
+    qDebug() << "<SetPixmap> " << path << " " << next_path;
 }
 
 void PicAnimationWidget::Start()
@@ -110,6 +116,8 @@ void PicAnimationWidget::paintEvent(QPaintEvent *event)
     x = (w - _pixmap2.width()) / 2;
     y = (h - _pixmap2.height()) / 2;
     painter.drawPixmap(x, y, alphaPixmap2);
+
+    QWidget::paintEvent(event);
 }
 
 void PicAnimationWidget::TimeOut()
@@ -124,9 +132,11 @@ void PicAnimationWidget::TimeOut()
     if (_factor >= 1) {
         _factor = 0;
         auto* cur_pro_item = dynamic_cast<ProTreeItem*>(_cur_item);
+        // qDebug() << "Timeout call GetNextItem";
         auto* next_pro_item = cur_pro_item->GetNextItem();
 
         if (!next_pro_item) {
+            qDebug() << "next_pro_item is nullptr";
             Stop();
             update();
             return;

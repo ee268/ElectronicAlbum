@@ -1,5 +1,7 @@
 #include "carouseldialog.h"
 #include "ui_carouseldialog.h"
+#include "previewlistwidget.h"
+#include <QDebug>
 
 CarouselDialog::CarouselDialog(QTreeWidgetItem *first_item, QTreeWidgetItem *last_item, QWidget *parent)
     : QDialog(parent)
@@ -37,6 +39,11 @@ CarouselDialog::CarouselDialog(QTreeWidgetItem *first_item, QTreeWidgetItem *las
         ":/icon/pause_press.png"
     );
 
+    auto* prelistWid = dynamic_cast<previewListWidget*>(ui->preListWidget);
+    connect(ui->picAnimation, &PicAnimationWidget::SigUpPreList, prelistWid, &previewListWidget::SlotUpPreList);
+
+    connect(ui->picAnimation, &PicAnimationWidget::SigSelectItem, prelistWid, &previewListWidget::SlotUpSelect);
+
     ui->picAnimation->SetPixmap(_first_item);
     ui->picAnimation->Start();
 }
@@ -45,3 +52,11 @@ CarouselDialog::~CarouselDialog()
 {
     delete ui;
 }
+
+void CarouselDialog::on_closeBtn_clicked()
+{
+    this->close();
+    ui->picAnimation->Stop();
+    disconnect(ui->picAnimation);
+}
+
