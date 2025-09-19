@@ -9,47 +9,46 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    carouseldialog.cpp \
-    confirmpage.cpp \
     main.cpp \
-    mainwindow.cpp \
-    openprothread.cpp \
-    picanimationwidget.cpp \
-    picbutton.cpp \
-    picshowdialog.cpp \
-    picstatebtn.cpp \
-    previewlistitem.cpp \
-    previewlistwidget.cpp \
-    prosetpage.cpp \
-    protree.cpp \
-    protreeitem.cpp \
-    protreethread.cpp \
-    protreewidget.cpp \
-    removeprodialog.cpp \
-    wizard.cpp
+    src/animationWidget/picanimationwidget.cpp \
+    src/buttons/picbutton.cpp \
+    src/buttons/picstatebtn.cpp \
+    src/dialogs/carouseldialog.cpp \
+    src/dialogs/picshowdialog.cpp \
+    src/dialogs/removeprodialog.cpp \
+    src/listWidget/previewlistitem.cpp \
+    src/listWidget/previewlistwidget.cpp \
+    src/mainwindow.cpp \
+    src/thread/openprothread.cpp \
+    src/thread/protreethread.cpp \
+    src/treeWidget/protree.cpp \
+    src/treeWidget/protreeitem.cpp \
+    src/treeWidget/protreewidget.cpp \
+    src/wizards/confirmpage.cpp \
+    src/wizards/prosetpage.cpp \
+    src/wizards/wizard.cpp \
 
 HEADERS += \
-    carouseldialog.h \
-    confirmpage.h \
-    const.h \
-    mainwindow.h \
-    openprothread.h \
-    picanimationwidget.h \
-    picbutton.h \
-    picshowdialog.h \
-    picstatebtn.h \
-    previewlistitem.h \
-    previewlistwidget.h \
-    prosetpage.h \
-    protree.h \
-    protreeitem.h \
-    protreethread.h \
-    protreewidget.h \
-    removeprodialog.h \
-    wizard.h
+    include/carouseldialog.h \
+    include/confirmpage.h \
+    include/const.h \
+    include/mainwindow.h \
+    include/openprothread.h \
+    include/picanimationwidget.h \
+    include/picbutton.h \
+    include/picshowdialog.h \
+    include/picstatebtn.h \
+    include/previewlistitem.h \
+    include/previewlistwidget.h \
+    include/prosetpage.h \
+    include/protree.h \
+    include/protreeitem.h \
+    include/protreethread.h \
+    include/protreewidget.h \
+    include/removeprodialog.h \
+    include/wizard.h \
 
 FORMS += \
-    carouseldialog.ui \
     confirmpage.ui \
     mainwindow.ui \
     picshowdialog.ui \
