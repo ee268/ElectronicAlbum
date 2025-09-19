@@ -2,12 +2,14 @@
 #include "ui_carouseldialog.h"
 #include "previewlistwidget.h"
 #include <QDebug>
+#include "protreewidget.h"
 
-CarouselDialog::CarouselDialog(QTreeWidgetItem *first_item, QTreeWidgetItem *last_item, QWidget *parent)
+CarouselDialog::CarouselDialog(QTreeWidgetItem *first_item, QTreeWidgetItem *last_item, QList<QPair<QString, QTreeWidgetItem*>>* pixmap_list, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::CarouselDialog)
     , _first_item(first_item)
     , _last_item(last_item)
+    , _pixmap_list(pixmap_list)
 
 {
     ui->setupUi(this);
@@ -39,12 +41,27 @@ CarouselDialog::CarouselDialog(QTreeWidgetItem *first_item, QTreeWidgetItem *las
         ":/icon/pause_press.png"
     );
 
+    connect(ui->slidenextBtn, &QPushButton::clicked, this, &CarouselDialog::SlotSlideNext);
+    connect(ui->slidepreBtn, &QPushButton::clicked, this, &CarouselDialog::SlotSlidePre);
+
     auto* prelistWid = dynamic_cast<previewListWidget*>(ui->preListWidget);
     connect(ui->picAnimation, &PicAnimationWidget::SigUpPreList, prelistWid, &previewListWidget::SlotUpPreList);
 
     connect(ui->picAnimation, &PicAnimationWidget::SigSelectItem, prelistWid, &previewListWidget::SlotUpSelect);
 
-    ui->picAnimation->SetPixmap(_first_item);
+    connect(prelistWid, &previewListWidget::SigUpSelectShow, ui->picAnimation, &PicAnimationWidget::SlotUpSelectShow);
+
+    connect(ui->playBtn, &PicStateBtn::clicked, ui->picAnimation, &PicAnimationWidget::SlotStartOrStop);
+
+    connect(ui->picAnimation, &PicAnimationWidget::SigStart, ui->playBtn, &PicStateBtn::SlotStart);
+    connect(ui->picAnimation, &PicAnimationWidget::SigStop, ui->playBtn, &PicStateBtn::SlotStop);
+
+    auto* _protree_widget = dynamic_cast<ProTreeWidget*>(parent);
+    connect(ui->picAnimation, &PicAnimationWidget::SigStartMusic, _protree_widget, &ProTreeWidget::SlotStartMusic);
+    connect(ui->picAnimation, &PicAnimationWidget::SigStopMusic, _protree_widget, &ProTreeWidget::SlotStopMusic);
+
+    ui->picAnimation->setPixmapList(_pixmap_list);
+    ui->picAnimation->SetPixmap(_pixmap_list->at(0).second);
     ui->picAnimation->Start();
 }
 
@@ -58,5 +75,15 @@ void CarouselDialog::on_closeBtn_clicked()
     this->close();
     ui->picAnimation->Stop();
     disconnect(ui->picAnimation);
+}
+
+void CarouselDialog::SlotSlideNext()
+{
+    ui->picAnimation->SlideNext();
+}
+
+void CarouselDialog::SlotSlidePre()
+{
+    ui->picAnimation->SlidePre();
 }
 

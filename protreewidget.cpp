@@ -21,6 +21,7 @@ ProTreeWidget::ProTreeWidget(QWidget *parent)
     , _open_progress_dlg(nullptr)
     , _thread_create_pro(nullptr)
     , _thread_open_pro(nullptr)
+    , _pixmap_list(new QList<QPair<QString, QTreeWidgetItem*>>)
 {
     // QRect screen_size = QGuiApplication::primaryScreen()->geometry();
     // this->setMinimumSize(screen_size.width(),screen_size.height());
@@ -37,6 +38,11 @@ ProTreeWidget::ProTreeWidget(QWidget *parent)
     connect(_action_closepro, &QAction::triggered, this, &ProTreeWidget::SlotClosePro);
     connect(this, &ProTreeWidget::itemDoubleClicked, this, &ProTreeWidget::SlotDoubleClickItem);
     connect(_action_slideshow, &QAction::triggered, this, &ProTreeWidget::SlotSlideShow);
+
+    _player = new QMediaPlayer(this);
+    _playlist = new QMediaPlaylist(this);
+    _playlist->setPlaybackMode(QMediaPlaylist::Loop);
+    _player->setPlaylist(_playlist);
 }
 
 void ProTreeWidget::AddProToTree()
@@ -71,6 +77,26 @@ void ProTreeWidget::AddProToTree(const QString &name, const QString &path)
     item->setData(0, Qt::ToolTipRole, file_path);
 
     this->addTopLevelItem(item);
+}
+
+void ProTreeWidget::createPixmapList(QTreeWidgetItem *root)
+{
+    if (!root) {
+        return;
+    }
+
+    auto* root_item = dynamic_cast<ProTreeItem*>(root);
+    for (int i = 0; i < root_item->childCount(); i++) {
+        auto* item = root_item->child(i);
+        auto* tree_item = dynamic_cast<ProTreeItem*>(item);
+
+        if (item->type() == TreeItemPic) {
+            _pixmap_list->append(QPair(tree_item->GetPath(), tree_item));
+        }
+        else if (item->type() == TreeItemDir) {
+            createPixmapList(item);
+        }
+    }
 }
 
 void ProTreeWidget::SlotitemPressed(QTreeWidgetItem *pressedItem, int column)
@@ -251,10 +277,21 @@ void ProTreeWidget::SlotSlideShow()
         return;
     }
 
+    _pixmap_list->clear();
+    createPixmapList(_right_btn_item);
+
+    // if (!_pixmap_list.count()) {
+    //     qDebug() << "_pixmap_list is empty";
+    // }
+
+    // for (int i = 0; i < _pixmap_list->count(); i++) {
+    //     qDebug() << _pixmap_list->at(i).first;
+    // }
+
     qDebug() << "first item path is: " << first_child_item->GetPath();
     qDebug() << "last item path is: " << last_child_item->GetPath();
 
-    _slide_show_dlg = std::make_shared<CarouselDialog>(first_child_item, last_child_item, this);
+    _slide_show_dlg = std::make_shared<CarouselDialog>(first_child_item, last_child_item, _pixmap_list, this);
     _slide_show_dlg->setModal(true);
     _slide_show_dlg->showMaximized();
 }
@@ -411,6 +448,46 @@ void ProTreeWidget::SlotPreShow()
     emit SigUpdateSelected(curItem->GetPath());
     _selected_item = curItem;
     this->setCurrentItem(curItem); //设置当前激活的item
+}
+
+void ProTreeWidget::SlotSetMusic()
+{
+    QFileDialog file_dialog;
+    file_dialog.setFileMode(QFileDialog::ExistingFiles);
+    file_dialog.setWindowTitle(tr("选择音乐"));
+    file_dialog.setDirectory(QDir::currentPath());
+    file_dialog.setViewMode(QFileDialog::Detail);
+    file_dialog.setNameFilter("(*.mp3)");
+    QStringList fileNames;
+    if (file_dialog.exec()) {
+        fileNames = file_dialog.selectedFiles();
+    }
+
+    if (fileNames.length() <= 0) {
+        return;
+    }
+
+    _playlist->clear();
+    for (auto filename: fileNames) {
+        _playlist->addMedia(QMediaContent(QUrl::fromLocalFile(filename)));
+    }
+
+    if (_player->state() != QMediaPlayer::PlayingState) {
+        _playlist->setCurrentIndex(0);
+        _player->setMedia(_playlist->media(0));
+    }
+}
+
+void ProTreeWidget::SlotStartMusic()
+{
+    _player->play();
+    // qDebug() << _player->volume();
+    // qDebug() << _player->state();
+}
+
+void ProTreeWidget::SlotStopMusic()
+{
+    _player->stop();
 }
 
 // void ProTreeWidget::SlotAddDirToTree(QTreeWidgetItem *parent, const QString &name, const QString &path, QTreeWidgetItem *root, int type)

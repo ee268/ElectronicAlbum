@@ -9,6 +9,8 @@ PicAnimationWidget::PicAnimationWidget(QWidget *parent)
     , _factor(0.0)
     , _cur_item(nullptr)
     , _b_start(false)
+    , _cur_pixmap_index(0)
+    , _pixmap_list(nullptr)
 {
     _timer = new QTimer(this);
     connect(_timer, &QTimer::timeout, this, &PicAnimationWidget::TimeOut);
@@ -19,11 +21,21 @@ PicAnimationWidget::~PicAnimationWidget()
 
 }
 
+void PicAnimationWidget::setPixmapList(QList<QPair<QString, QTreeWidgetItem *> > *pixmap_list)
+{
+    if (!pixmap_list) {
+        return;
+    }
+
+    _pixmap_list = pixmap_list;
+}
+
 void PicAnimationWidget::SetPixmap(QTreeWidgetItem *item)
 {
     if (!item) {
         return;
     }
+    // qDebug() << "start setpixmap";
 
     auto* tree_item = dynamic_cast<ProTreeItem*>(item);
     auto path = tree_item->GetPath();
@@ -39,7 +51,13 @@ void PicAnimationWidget::SetPixmap(QTreeWidgetItem *item)
     emit SigSelectItem(item);
 
     // qDebug() << "SetPixmap call GetNextItem";
-    auto* next_item = tree_item->GetNextItem();
+
+    // _cur_pixmap_index++;
+    if (_cur_pixmap_index + 1 >= _pixmap_list->count()) {
+        return;
+    }
+
+    auto* next_item = dynamic_cast<ProTreeItem*>(_pixmap_list->at(_cur_pixmap_index + 1).second);
     if (!next_item) {
         return;
     }
@@ -52,11 +70,14 @@ void PicAnimationWidget::SetPixmap(QTreeWidgetItem *item)
         emit SigUpPreList(next_item);
     }
 
-    qDebug() << "<SetPixmap> " << path << " " << next_path;
+    // qDebug() << "<SetPixmap> " << path << " " << next_path;
 }
 
 void PicAnimationWidget::Start()
 {
+    // qDebug() << "start timeout";
+    emit SigStart();
+    emit SigStartMusic();
     _factor = 0;
     _timer->start(25);
     _b_start = true;
@@ -64,9 +85,53 @@ void PicAnimationWidget::Start()
 
 void PicAnimationWidget::Stop()
 {
+    emit SigStop();
+    emit SigStopMusic();
     _timer->stop();
     _factor = 0;
     _b_start = false;
+}
+
+void PicAnimationWidget::SlideNext()
+{
+    Stop();
+    if (!_cur_item) {
+        return;
+    }
+
+    // auto* cur_pro_item = dynamic_cast<ProTreeItem*>(_cur_item);
+    _cur_pixmap_index++;
+    if (_cur_pixmap_index >= _pixmap_list->count()) {
+        _cur_pixmap_index = _pixmap_list->count() - 1;
+    }
+    auto* next_item = dynamic_cast<ProTreeItem*>(_pixmap_list->at(_cur_pixmap_index).second);
+    if (!next_item) {
+        return;
+    }
+
+    SetPixmap(next_item);
+    update();
+}
+
+void PicAnimationWidget::SlidePre()
+{
+    Stop();
+    if (!_cur_item) {
+        return;
+    }
+
+    // auto* cur_pro_item = dynamic_cast<ProTreeItem*>(_cur_item);
+    _cur_pixmap_index--;
+    if (_cur_pixmap_index < 0) {
+        _cur_pixmap_index = 0;
+    }
+    auto* pre_item = dynamic_cast<ProTreeItem*>(_pixmap_list->at(_cur_pixmap_index).second);
+    if (!pre_item) {
+        return;
+    }
+
+    SetPixmap(pre_item);
+    update();
 }
 
 void PicAnimationWidget::paintEvent(QPaintEvent *event)
@@ -120,9 +185,41 @@ void PicAnimationWidget::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
+void PicAnimationWidget::UpSelectPixmap(QTreeWidgetItem *item)
+{
+    if (!item) {
+        return;
+    }
+
+    auto * tree_item = dynamic_cast<ProTreeItem*>(item);
+    auto path = tree_item->GetPath();
+
+    _pixmap1.load(path);
+    _cur_item = tree_item;
+
+    if (_map_items.find(path) == _map_items.end()) {
+        _map_items[path] = tree_item;
+    }
+
+    _cur_pixmap_index++;
+    if (_cur_pixmap_index >= _pixmap_list->count()) {
+        return;
+    }
+    auto* next_item = dynamic_cast<ProTreeItem*>(_pixmap_list->at(_cur_pixmap_index).second);
+    if (!next_item) {
+        return;
+    }
+
+    auto next_path = next_item->GetPath();
+    _pixmap2.load(next_path);
+    if (_map_items.find(next_path) == _map_items.end()) {
+        _map_items[next_path] = next_item;
+    }
+}
+
 void PicAnimationWidget::TimeOut()
 {
-    if (!_cur_item) {
+    if (!_cur_item || _cur_pixmap_index >= _pixmap_list->count()) {
         Stop();
         update();
         return;
@@ -131,9 +228,15 @@ void PicAnimationWidget::TimeOut()
     _factor = _factor + 0.01;
     if (_factor >= 1) {
         _factor = 0;
-        auto* cur_pro_item = dynamic_cast<ProTreeItem*>(_cur_item);
+        // auto* cur_pro_item = dynamic_cast<ProTreeItem*>(_cur_item);
         // qDebug() << "Timeout call GetNextItem";
-        auto* next_pro_item = cur_pro_item->GetNextItem();
+        _cur_pixmap_index++;
+        if (_cur_pixmap_index >= _pixmap_list->count()) {
+            Stop();
+            update();
+            return;
+        }
+        auto* next_pro_item = dynamic_cast<ProTreeItem*>(_pixmap_list->at(_cur_pixmap_index).second);
 
         if (!next_pro_item) {
             qDebug() << "next_pro_item is nullptr";
@@ -148,4 +251,32 @@ void PicAnimationWidget::TimeOut()
     }
 
     update();
+}
+
+void PicAnimationWidget::SlotUpSelectShow(QString path)
+{
+    auto iter = _map_items.find(path);
+    if (iter == _map_items.end()) {
+        return;
+    }
+
+    UpSelectPixmap(iter.value());
+    update();
+}
+
+void PicAnimationWidget::SlotStartOrStop()
+{
+    if (!_b_start) {
+        _factor = 0;
+        _timer->start();
+        _b_start = true;
+        emit SigStartMusic();
+    }
+    else {
+        _timer->stop();
+        _factor = 0;
+        update();
+        _b_start = false;
+        emit SigStopMusic();
+    }
 }

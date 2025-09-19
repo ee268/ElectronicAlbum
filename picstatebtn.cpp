@@ -120,3 +120,13 @@ void PicStateBtn::setPress2Icon()
     this->setIcon(tmpPixmap);
     _cur_state = PicBtnState2Normal;
 }
+
+void PicStateBtn::SlotStart()
+{
+    setNormal2Icon();
+}
+
+void PicStateBtn::SlotStop()
+{
+    setNormalIcon();
+}

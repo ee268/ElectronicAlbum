@@ -23,6 +23,10 @@ private:
 public slots:
     void SlotUpPreList(QTreeWidgetItem* tree_item);
     void SlotUpSelect(QTreeWidgetItem* tree_item);
+    void SlotItemPressed(QListWidgetItem *item);
+
+signals:
+    void SigUpSelectShow(QString path);
 };
 
 #endif // PREVIEWLISTWIDGET_H

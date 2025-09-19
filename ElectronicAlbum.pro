@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -32,7 +32,6 @@ HEADERS += \
     carouseldialog.h \
     confirmpage.h \
     const.h \
-    include/test.h \
     mainwindow.h \
     openprothread.h \
     picanimationwidget.h \
