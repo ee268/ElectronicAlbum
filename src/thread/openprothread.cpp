@@ -1,7 +1,7 @@
-#include "openprothread.h"
+#include "include/openprothread.h"
 #include <QDir>
-#include "protreeitem.h"
-#include "const.h"
+#include "include/protreeitem.h"
+#include "include/const.h"
 
 OpenProThread::OpenProThread(const QString &src_path, int file_cnt, QTreeWidget *self, QObject *parent)
     : QThread(parent)

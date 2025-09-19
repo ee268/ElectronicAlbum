@@ -1,9 +1,9 @@
-#include "previewlistwidget.h"
+#include "include/previewlistwidget.h"
 #include <QDebug>
 #include <QPainter>
-#include "const.h"
-#include "protreeitem.h"
-#include "previewlistitem.h"
+#include "include/const.h"
+#include "include/protreeitem.h"
+#include "include/previewlistitem.h"
 #include <QGuiApplication>
 
 previewListWidget::previewListWidget(QWidget *parent)

@@ -1,4 +1,4 @@
-#include "wizard.h"
+#include "include/wizard.h"
 #include "ui_wizard.h"
 
 Wizard::Wizard(QWidget *parent)

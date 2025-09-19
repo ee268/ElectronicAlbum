@@ -1,8 +1,8 @@
-#include "carouseldialog.h"
+#include "include/carouseldialog.h"
 #include "ui_carouseldialog.h"
-#include "previewlistwidget.h"
+#include "include/previewlistwidget.h"
 #include <QDebug>
-#include "protreewidget.h"
+#include "include/protreewidget.h"
 
 CarouselDialog::CarouselDialog(QTreeWidgetItem *first_item, QTreeWidgetItem *last_item, QList<QPair<QString, QTreeWidgetItem*>>* pixmap_list, QWidget *parent)
     : QDialog(parent)

@@ -1,4 +1,4 @@
-#include "previewlistitem.h"
+#include "include/previewlistitem.h"
 
 PreviewListItem::PreviewListItem(const QIcon &icon, const QString &text, const int &index, QListWidget *listview, int type)
     : QListWidgetItem(icon, "", listview, type)

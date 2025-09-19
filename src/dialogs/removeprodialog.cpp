@@ -1,4 +1,4 @@
-#include "removeprodialog.h"
+#include "include/removeprodialog.h"
 #include "ui_removeprodialog.h"
 
 RemoveProDialog::RemoveProDialog(QWidget *parent)

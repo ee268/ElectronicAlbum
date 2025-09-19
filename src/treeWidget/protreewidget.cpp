@@ -1,7 +1,7 @@
-#include "protreewidget.h"
+#include "include/protreewidget.h"
 #include <QDir>
-#include "protreeitem.h"
-#include "const.h"
+#include "include/protreeitem.h"
+#include "include/const.h"
 #include <QHeaderView>
 #include <QGuiApplication>
 // #include <QScreen>
@@ -9,8 +9,8 @@
 #include <QDebug>
 #include <QMenu>
 #include <QFileDialog>
-#include "removeprodialog.h"
-#include "carouseldialog.h"
+#include "include/removeprodialog.h"
+#include "include/carouseldialog.h"
 
 ProTreeWidget::ProTreeWidget(QWidget *parent)
     : QTreeWidget(parent)

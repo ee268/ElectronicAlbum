@@ -1,4 +1,4 @@
-#include "confirmpage.h"
+#include "include/confirmpage.h"
 #include "ui_confirmpage.h"
 
 ConfirmPage::ConfirmPage(QWidget *parent)

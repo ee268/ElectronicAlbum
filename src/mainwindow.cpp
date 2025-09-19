@@ -1,15 +1,15 @@
-#include "mainwindow.h"
+#include "include/mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMenu>
 #include <QAction>
 #include <QScreen>
 #include <QRect>
 #include <QDebug>
-#include "wizard.h"
-#include "protree.h"
+#include "include/wizard.h"
+#include "include/protree.h"
 #include <QFileDialog>
-#include "protreewidget.h"
-#include "picshowdialog.h"
+#include "include/protreewidget.h"
+#include "include/picshowdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

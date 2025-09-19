@@ -1,4 +1,4 @@
-#include "picshowdialog.h"
+#include "include/picshowdialog.h"
 #include "ui_picshowdialog.h"
 #include <QDebug>
 

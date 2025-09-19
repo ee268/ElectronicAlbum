@@ -1,5 +1,5 @@
-#include "picanimationwidget.h"
-#include "protreeitem.h"
+#include "include/picanimationwidget.h"
+#include "include/protreeitem.h"
 #include <QTimer>
 #include <QPainter>
 #include <QDebug>

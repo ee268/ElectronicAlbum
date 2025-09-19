@@ -1,7 +1,7 @@
-#include "protreethread.h"
+#include "include/protreethread.h"
 #include <QDir>
-#include "protreeitem.h"
-#include "const.h"
+#include "include/protreeitem.h"
+#include "include/const.h"
 #include <QDebug>
 #include <QFile>
 
